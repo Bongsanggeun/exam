@@ -1,67 +1,52 @@
 <?xml version="1.0" encoding="euc-kr" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mycompany.webapp.dao.UsersDao">
+<mapper namespace="com.mycompany.webapp.dao.CartDao">
 
-   <insert id="insert" parameterType="user">
-      <selectKey keyProperty="uid" resultType="int" order="BEFORE">
-         select seq_user_uno.nextval from dual
+   <insert id="insert" parameterType="cart">
+      <selectKey keyProperty="cid" resultType="int" order="BEFORE">
+         select
+         seq_cart_cno.nextval from dual
       </selectKey>
-      insert into users
-      (user_id,
-      user_name, user_email, user_password,
-      user_phone, dog_size, enabled,
-      authority)
+      insert into cart
+      (cart_id, cart_amount, user_id, p_id)
       values
-      (#{uid},#{uname},#{uemail},#{upassword},#{uphone},#{dogsize},1,'ROLE_USER')
+      (#{cid},#{camount},#{user_id},#{p_id})
    </insert>
 
-   <resultMap id="userResultMap" type="user">
-      <result property="uid" column="user_id" />
-      <result property="uname" column="user_name" />
-      <result property="uemail" column="user_email" />
-      <result property="upassword" column="user_password" />
-      <result property="uphone" column="user_phone" />
-      <result property="dogsize" column="dog_size" />
-      <result property="uenabled" column="enabled" />
-      <result property="uauthority" column="authority" />
+   <resultMap id="cartResultMap" type="cart">
+   <!--    <result property="cid" column="cart_id" />
+      <result property="camount" column="cart_amount" /> -->
    </resultMap>
 
-
-
-
-   <!-- <select id="selectByUid" parameterType="string" resultMap="userResultMap"> 
-      select user_id, user_name, user_email, user_password, user_phone, dog_size, 
-      enabled, authority from users where user_id=#{uid} </select> -->
-
-   <select id="selectInfoByUid" parameterType="string"
-      resultMap="userResultMap">
-      select user_id,
-      user_name, user_email, user_password,
-      user_phone, dog_size, enabled,
-      authority
-      from users
-      where
-      user_id=#{uid}
-   </select>
-   
-   <select id="selectByUemail" parameterType="string"
-      resultMap="userResultMap">
-      select user_email, user_password
-      from users
-      where
-      user_email=#{uemail}
+ 
+   <select id="selectProduct" parameterType="cart" resultMap="cartResultMap">
+      select p.p_name, p.p_price, cart_amount, pho.photo_id, ph.photo_oname,
+      pho.photo_sname, pho.photo_type, pho.photo_role
+      from cart, products p,
+      users u, photos pho
+      where user_id = #{user_id} and
+      cart.p_id = #{p.p_id}
+      and
+      p.p_id = #{pho.p_id}
    </select>
 
-   <!-- <select id="selectNameAndEmailByUid" parameterType="user" resultMap="userResultMap"> 
-      select user_id, user_name, user_email from users where user_id=#{uid} </select> 
-      <select id="selectEmailByUid" parameterType="user" resultMap="userResultMap"> 
-      select user_email from users where user_id=#{uid} </select> <select id="selectPasswordByUid" 
-      parameterType="user" resultMap="userResultMap"> select user_password from 
-      users where user_id=#{uid} </select> <update id="updatePassword" parameterType="string"> 
-      update users set user_password=#{upassword}, where user_id=#{uid} </update> 
-      <update id="updatePhone" parameterType="string"> update users set user_phone=#{uphone}, 
-      where user_id=#{uid} </update> <delete id="deleteByUid" parameterType="int"> 
-      delete from users where user_id=#{uid} </delete> -->
+
+   <delete id="deleteCart" parameterType="cart">
+      delete from cart
+      where
+      user_id=#{user_id} and
+      p_id=#{p_id}
+   </delete>
 
 
-</mapper>
+   <update id="updateCartAmount" parameterType="int" >
+      update cart
+      set
+      cart_amount=#{cart_amount}
+      where user_id=#{user_id} and
+      p_id=#{p_id}
+   </update>
+
+
+
+</mapper> 

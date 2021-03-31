@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="euc-kr" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mycompany.webapp.dao.REVIEWDao">
+<mapper namespace="com.mycompany.webapp.dao.ReviewDao">
 
-   <select id="selectAll" resultType="review">
-   	select REVIEW_ID, REVIEW_SCORE, REVIEW_TITLE, REVIEW_CONTENT, REVIEW_PHTOTO, REVIEW_DATE, P_ID, ORDER_ID, USER_ID
-   	from REVIEW
-   	order by REVIEW desc
+   <select id="selectall" resultType="review">
+   	select review_id, review_score, review_title, review_content, review_phtoto, review_date, p_id, order_id, user_id
+   	from review
+   	order by review desc
    </select>
    
    <insert id="insert" parameterType="review">
-    insert into QNA
-    (REVIEW_ID, REVIEW_SCORE, REVIEW_TITLE, REVIEW_CONTENT, REVIEW_PHOTO,REVIEW_DATE)
+    insert into qna
+    (review_id, review_score, review_title, review_content, review_photo,review_date)
     values
-    (#{REVIEW_ID},#{REVIEW_SCORE},#{REVIEW_TITLE},#{REVIEW_CONTENT},#{REVIEW_PHOTO},#{REVIEW_DATE})
+    (#{review_id},#{review_score},#{review_title},#{review_content},#{review_photo},#{review_date})
    </insert>
    
-   <resultMap id="userResultMap" type="user">
+   <resultMap id="userresultmap" type="user">
    		<result column="user_name" property="uname"/>
    </resultMap>
    
-   <select id="selectUser" resultType="review" resultMap="userResultMap">
+   <select id="selectuser" resultType="review" resultMap="userresultmap">
    select u.user_id, u.user_name, u.dog_size
    from user
    where user_id=#{user_id}
    </select>
-   
+     
    <update id="update" parameterType="review">
-   	update REVIEW set
-   		REVIEW_SCORE=#{REVIEW_SCORE},
-   		REVIEW_TITLE=#{REVIEW_TITLE},
-   		REVIEW_CONTENT=#{REVIEW_CONTENT},
-   		REVIEW_PHTOTO=#{REVIEW_PHTOTO},
-   		REVIEW_DATE=#{REVIEW_DATE},
-   	where REVIEW_ID=#{REVIEW_ID}
+   	update review set
+   		review_score=#{review_score},
+   		review_title=#{review_title},
+   		review_content=#{review_content},
+   		review_phtoto=#{review_phtoto},
+   		review_date=#{review_date},
+   	where review_id=#{review_id}
    </update>
    
-   <delete id="deleteByREVIEW_ID" parameterType="int">
-	   	delete from REVIEW
-	   	where REVIEW_ID=#{REVIEW_ID}
+   <delete id="deletebyreview_id" parameterType="int">
+	   	delete from review
+	   	where review_id=#{review_id}
 	   	user_id=#{user_id}
    </delete>
    
 </mapper>
+
